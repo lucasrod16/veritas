@@ -20,7 +20,9 @@ func main() {
 	route := caddyhttp.Route{
 		MatcherSetsRaw: []caddy.ModuleMap{
 			{
-				"host": caddyconfig.JSON(caddyhttp.MatchHost{"localhost"}, nil),
+				"host":   caddyconfig.JSON(caddyhttp.MatchHost{"localhost"}, nil),
+				"path":   caddyconfig.JSON(caddyhttp.MatchPath{"/test"}, nil),
+				"method": caddyconfig.JSON(caddyhttp.MatchMethod{http.MethodGet}, nil),
 			},
 		},
 		HandlersRaw: []json.RawMessage{
