@@ -1,0 +1,34 @@
+.btn-outline-custom {
+	color: #f8d7a6;
+	border-color: #f8d7a6;
+}
+
+.btn-outline-custom:hover {
+	color: #fff;
+	background-color: #f8d7a6;
+	border-color: #f8d7a6;
+}
+
+.spinner-custom {
+	border-color: #f8d7a6;
+	border-top-color: transparent;
+}
+
+.navbar-custom {
+	background-color: #f8d7a6;
+	border-radius: 0.5rem;
+}
+
+.navbar-brand {
+	flex: 1;
+	text-align: center;
+}
+
+.navbar-icon {
+	padding-right: 10px;
+}
+
+.github-icon {
+	width: 24px;
+	height: auto;
+}
