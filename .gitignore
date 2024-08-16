@@ -26,3 +26,6 @@ go.work.sum
 
 # TLS certs
 *.pem
+
+# Build artifacts
+veritas
