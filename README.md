@@ -1,2 +1,2 @@
 # veritas
-Vulnerability management platform to help you detect, visualize, and remediate software vulnerabilities.
+Vulnerability management platform for detecting, visualizing, and remediating software vulnerabilities.
