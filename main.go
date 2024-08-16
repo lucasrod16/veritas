@@ -17,23 +17,25 @@ func main() {
 		Body:       "hello world\n",
 	}
 
+	route := caddyhttp.Route{
+		MatcherSetsRaw: []caddy.ModuleMap{
+			{
+				"host": caddyconfig.JSON(caddyhttp.MatchHost{"localhost"}, nil),
+			},
+		},
+		HandlersRaw: []json.RawMessage{
+			caddyconfig.JSONModuleObject(handler, "handler", "static_response", nil),
+		},
+	}
+
+	server := caddyhttp.Server{
+		Listen: []string{":8080"},
+		Routes: caddyhttp.RouteList{route},
+	}
+
 	app := caddyhttp.App{
 		Servers: map[string]*caddyhttp.Server{
-			"veritas": {
-				Listen: []string{":8080"},
-				Routes: caddyhttp.RouteList{
-					{
-						MatcherSetsRaw: []caddy.ModuleMap{
-							{
-								"host": caddyconfig.JSON(caddyhttp.MatchHost{"localhost"}, nil),
-							},
-						},
-						HandlersRaw: []json.RawMessage{
-							caddyconfig.JSONModuleObject(handler, "handler", "static_response", nil),
-						},
-					},
-				},
-			},
+			"veritas": &server,
 		},
 	}
 
@@ -43,8 +45,7 @@ func main() {
 		},
 	}
 
-	err := caddy.Run(&cfg)
-	if err != nil {
+	if err := caddy.Run(&cfg); err != nil {
 		log.Fatal(err)
 	}
 
