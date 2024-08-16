@@ -1,55 +1,36 @@
 package main
 
 import (
-	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
-	"strconv"
-
-	"github.com/caddyserver/caddy/v2"
-	"github.com/caddyserver/caddy/v2/caddyconfig"
-	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
 )
 
 func main() {
-	handler := caddyhttp.StaticResponse{
-		StatusCode: caddyhttp.WeakString(strconv.Itoa(http.StatusOK)),
-		Body:       "hello world\n",
-	}
+	http.HandleFunc("/", routeHandler)
 
-	route := caddyhttp.Route{
-		MatcherSetsRaw: []caddy.ModuleMap{
-			{
-				"host":   caddyconfig.JSON(caddyhttp.MatchHost{"localhost"}, nil),
-				"path":   caddyconfig.JSON(caddyhttp.MatchPath{"/test"}, nil),
-				"method": caddyconfig.JSON(caddyhttp.MatchMethod{http.MethodGet}, nil),
-			},
-		},
-		HandlersRaw: []json.RawMessage{
-			caddyconfig.JSONModuleObject(handler, "handler", "static_response", nil),
-		},
-	}
-
-	server := caddyhttp.Server{
-		Listen: []string{":8080"},
-		Routes: caddyhttp.RouteList{route},
-	}
-
-	app := caddyhttp.App{
-		Servers: map[string]*caddyhttp.Server{
-			"veritas": &server,
-		},
-	}
-
-	cfg := caddy.Config{
-		AppsRaw: caddy.ModuleMap{
-			"http": caddyconfig.JSON(app, nil),
-		},
-	}
-
-	if err := caddy.Run(&cfg); err != nil {
+	fmt.Println("Server listening on port 8080...")
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
 		log.Fatal(err)
 	}
+}
 
-	select {}
+func routeHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.URL.Path {
+	case "/":
+		if r.Method == http.MethodGet {
+			w.Write([]byte("Welcome to Veritas 🤠\n"))
+			return
+		}
+		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+	case "/test", "/test/":
+		if r.Method == http.MethodGet {
+			w.Write([]byte("hello world\n"))
+			return
+		}
+		http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+	default:
+		http.NotFound(w, r)
+	}
 }
