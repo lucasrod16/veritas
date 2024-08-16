@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
+	"net/http"
+	"strconv"
 
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig"
@@ -9,6 +12,11 @@ import (
 )
 
 func main() {
+	handler := caddyhttp.StaticResponse{
+		StatusCode: caddyhttp.WeakString(strconv.Itoa(http.StatusOK)),
+		Body:       "hello world\n",
+	}
+
 	app := caddyhttp.App{
 		Servers: map[string]*caddyhttp.Server{
 			"veritas": {
@@ -19,6 +27,9 @@ func main() {
 							{
 								"host": caddyconfig.JSON(caddyhttp.MatchHost{"localhost"}, nil),
 							},
+						},
+						HandlersRaw: []json.RawMessage{
+							caddyconfig.JSONModuleObject(handler, "handler", "static_response", nil),
 						},
 					},
 				},
