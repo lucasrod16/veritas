@@ -12,7 +12,7 @@ func main() {
 	mux.HandleFunc("/test", testHandler)
 
 	fmt.Println("Server listening on port 8080...")
-	log.Fatal(http.ListenAndServe(":8080", stripSlashes(mux)))
+	log.Fatal(http.ListenAndServeTLS(":8080", "localhost.pem", "localhost-key.pem", stripSlashes(mux)))
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
