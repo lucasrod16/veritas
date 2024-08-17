@@ -20,6 +20,8 @@ func TestStartServer(t *testing.T) {
 		require.NoError(t, StartServer(context.Background(), shutdownSignal))
 	}()
 
+	time.Sleep(2 * time.Second)
+
 	t.Run("root", func(t *testing.T) {
 		resp, err := http.Get("http://localhost:8080/")
 		require.NoError(t, err)
