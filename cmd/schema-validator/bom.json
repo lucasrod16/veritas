@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:96b5f237-40fd-4742-85fe-68c0862535be",
+  "serialNumber": "urn:uuid:3ace1790-2ed7-405d-b319-1723f3dd4426",
   "version": 1,
   "metadata": {
-    "timestamp": "2024-08-17T03:24:27-05:00",
+    "timestamp": "2024-08-17T03:35:27-05:00",
     "tools": {
       "components": [
         {
@@ -9718,7 +9718,7 @@
   ],
   "vulnerabilities": [
     {
-      "bom-ref": "urn:uuid:d8bd7b82-223f-43ee-bd77-e7048a613ca1",
+      "bom-ref": "urn:uuid:9ad57497-4714-434d-8a97-eb3dc0f8cba7",
       "id": "CVE-2016-20013",
       "source": {
         "name": "ubuntu-distro-ubuntu-24.04",
@@ -9750,7 +9750,7 @@
       ]
     },
     {
-      "bom-ref": "urn:uuid:ae26b9e9-3372-4cf7-9c89-1063d7630356",
+      "bom-ref": "urn:uuid:a0009a0b-50f1-445a-b443-d0a96bedf874",
       "id": "CVE-2016-20013",
       "source": {
         "name": "ubuntu-distro-ubuntu-24.04",
@@ -9782,7 +9782,7 @@
       ]
     },
     {
-      "bom-ref": "urn:uuid:ceb21450-3431-4f88-b6df-f1dad2280d17",
+      "bom-ref": "urn:uuid:a66df68c-1e99-43cd-abc3-74c818b14a48",
       "id": "CVE-2016-2781",
       "source": {
         "name": "ubuntu-distro-ubuntu-24.04",
@@ -9814,7 +9814,7 @@
       ]
     },
     {
-      "bom-ref": "urn:uuid:8732e5c9-58fa-4907-8e64-feeabf0523cf",
+      "bom-ref": "urn:uuid:203b0e63-28c2-42b3-88a5-17275d3732d2",
       "id": "CVE-2022-3219",
       "source": {
         "name": "ubuntu-distro-ubuntu-24.04",
@@ -9846,7 +9846,7 @@
       ]
     },
     {
-      "bom-ref": "urn:uuid:6a2a2d34-eacf-4a54-999a-c4f07244af83",
+      "bom-ref": "urn:uuid:f35502ae-b769-4d66-b60e-562131406723",
       "id": "CVE-2022-41409",
       "source": {
         "name": "ubuntu-distro-ubuntu-24.04",
@@ -9878,7 +9878,7 @@
       ]
     },
     {
-      "bom-ref": "urn:uuid:34636fa4-8d9e-4747-a5e5-9fb8a5fc2f11",
+      "bom-ref": "urn:uuid:613e8d56-1c28-4935-958e-f6012c2d87cd",
       "id": "CVE-2024-2236",
       "source": {
         "name": "ubuntu-distro-ubuntu-24.04",

@@ -3,7 +3,7 @@ package veritashttp
 import (
 	"net/http"
 
-	"github.com/lucasrod16/veritas/scanner"
+	"github.com/lucasrod16/veritas/pkg/scanner"
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {

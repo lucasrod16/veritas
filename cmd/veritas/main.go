@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/lucasrod16/veritas/veritashttp"
+	"github.com/lucasrod16/veritas/pkg/veritashttp"
 )
 
 func main() {
