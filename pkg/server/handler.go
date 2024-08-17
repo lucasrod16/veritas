@@ -1,4 +1,4 @@
-package veritashttp
+package server
 
 import (
 	"net/http"
