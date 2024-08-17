@@ -6,14 +6,12 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/lucasrod16/veritas/vdb"
 )
 
 func StartServer(ctx context.Context, shutdownSignal <-chan os.Signal) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/{$}", rootHandler)
-	mux.HandleFunc("/scan", scanHandler(vdb.NewGrypeDBCfg()))
+	mux.HandleFunc("/scan/{userInput}", scanHandler)
 
 	srv := &http.Server{Addr: ":8080", Handler: stripSlashes(mux)}
 

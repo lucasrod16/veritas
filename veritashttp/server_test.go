@@ -33,19 +33,13 @@ func TestStartServer(t *testing.T) {
 	})
 
 	t.Run("GET scan success", func(t *testing.T) {
-		resp, err := http.Get("http://localhost:8080/scan")
+		resp, err := http.Get("http://localhost:8080/scan/alpine")
 		require.NoError(t, err)
-
-		defer resp.Body.Close()
-		rb, err := io.ReadAll(resp.Body)
-		require.NoError(t, err)
-
 		require.Equal(t, http.StatusOK, resp.StatusCode)
-		require.Equal(t, "successfully loaded vulnerability database 🔐\n", string(rb))
 	})
 
 	t.Run("non-GET scan failure", func(t *testing.T) {
-		resp, err := http.Post("http://localhost:8080/scan", "application/json", nil)
+		resp, err := http.Post("http://localhost:8080/scan/dog", "application/json", nil)
 		require.NoError(t, err)
 
 		defer resp.Body.Close()

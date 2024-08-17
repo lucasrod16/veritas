@@ -6,8 +6,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/anchore/grype/grype/db"
-	"github.com/lucasrod16/veritas/vdb"
 	"github.com/stretchr/testify/require"
 )
 
@@ -63,50 +61,38 @@ func TestScanHandler(t *testing.T) {
 		name           string
 		method         string
 		expectedStatus int
-		expectedBody   string
-		cfg            db.Config
+		userInput      string
 	}{
 		{
-			name:           "successful load",
+			name:           "valid input",
 			method:         http.MethodGet,
 			expectedStatus: http.StatusOK,
-			expectedBody:   "successfully loaded vulnerability database 🔐\n",
-			cfg:            vdb.NewGrypeDBCfg(),
+			userInput:      "alpine",
 		},
 		{
-			name:           "failed load",
+			name:           "invalid input",
 			method:         http.MethodGet,
 			expectedStatus: http.StatusInternalServerError,
-			expectedBody:   "failed to load vulnerability database\n",
-			cfg:            newTestDBCfg(),
+			userInput:      "not-a-valid-image-reference........",
 		},
 		{
 			name:           "non-GET request",
 			method:         http.MethodPost,
 			expectedStatus: http.StatusMethodNotAllowed,
-			expectedBody:   "405 Method Not Allowed\n",
-			cfg:            vdb.NewGrypeDBCfg(),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			req := httptest.NewRequest(tt.method, "http://example.com/", nil)
+			req.SetPathValue("userInput", tt.userInput)
 			rr := httptest.NewRecorder()
 
-			handler := http.HandlerFunc(scanHandler(tt.cfg))
+			handler := http.HandlerFunc(scanHandler)
 			handler.ServeHTTP(rr, req)
 
-			require.Equal(t, tt.expectedBody, rr.Body.String())
 			require.Equal(t, tt.expectedStatus, rr.Code)
 		})
-	}
-}
-
-func newTestDBCfg() db.Config {
-	return db.Config{
-		DBRootDir:  "fake",
-		ListingURL: "https://fake", // cause LoadVulnerabilityDB to fail
 	}
 }
 
