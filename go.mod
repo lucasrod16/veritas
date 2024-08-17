@@ -7,6 +7,7 @@ require (
 	github.com/anchore/grype v0.79.6
 	github.com/anchore/syft v1.11.0
 	github.com/stretchr/testify v1.9.0
+	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/sync v0.8.0
 )
 
@@ -197,6 +198,8 @@ require (
 	github.com/wagoodman/go-partybus v0.0.0-20230516145632-8ccac152c651 // indirect
 	github.com/wagoodman/go-progress v0.0.0-20230925121702-07e42b3cdba0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
+	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
+	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
 	go.opencensus.io v0.24.0 // indirect

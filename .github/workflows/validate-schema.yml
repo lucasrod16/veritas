@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Validate Schema
 
 on:
   push:
@@ -16,8 +16,5 @@ jobs:
       with:
         go-version-file: go.mod
 
-    - name: Run Unit Tests
-      run: make test-unit
-
-    - name: Print Coverage
-      run: make cover
+    - name: Validate Schema
+      run: make validate-schema

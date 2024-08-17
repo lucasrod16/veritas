@@ -28,4 +28,5 @@ go.work.sum
 *.pem
 
 # Build artifacts
+bin
 veritas

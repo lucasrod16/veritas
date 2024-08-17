@@ -2,7 +2,6 @@ package veritashttp
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/lucasrod16/veritas/scanner"
 )
@@ -18,13 +17,12 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 func scanHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		userInput := r.PathValue("userInput")
-		matchCount, err := scanner.Scan(userInput)
+		reportPayload, err := scanner.Scan(userInput)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		matchStr := strconv.Itoa(matchCount) + "\n"
-		w.Write([]byte(matchStr))
+		w.Write([]byte(reportPayload))
 		return
 	}
 	http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
