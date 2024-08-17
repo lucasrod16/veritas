@@ -1,19 +1,18 @@
 #!/bin/bash
 
 ./bin/veritas &
-sleep 2
 PID=$!
+sleep 2
 
 ./bin/schema-validator
 EXIT_CODE=$?
 
-echo "Sending shutdown signal to process $PID..."
 kill -SIGINT "$PID"
 sleep 2
 
 if curl -s http://localhost:8080/ > /dev/null; then
-  echo "Error: The server is still running."
-  exit 1
+  echo "Error: The server is still running. You may have to manually kill the process."
+  exit "$EXIT_CODE"
 else
   echo "Server has been shut down."
 fi
