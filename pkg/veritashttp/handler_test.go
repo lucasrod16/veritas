@@ -67,13 +67,19 @@ func TestScanHandler(t *testing.T) {
 			name:           "valid input",
 			method:         http.MethodGet,
 			expectedStatus: http.StatusOK,
-			userInput:      "alpine",
+			userInput:      "cgr.dev/chainguard/static:latest",
 		},
 		{
 			name:           "invalid input",
 			method:         http.MethodGet,
 			expectedStatus: http.StatusInternalServerError,
 			userInput:      "not-a-valid-image-reference........",
+		},
+		{
+			name:           "bad request",
+			method:         http.MethodGet,
+			expectedStatus: http.StatusBadRequest,
+			userInput:      "",
 		},
 		{
 			name:           "non-GET request",
@@ -85,7 +91,10 @@ func TestScanHandler(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			req := httptest.NewRequest(tt.method, "http://example.com/", nil)
-			req.SetPathValue("userInput", tt.userInput)
+			queryParams := req.URL.Query()
+			queryParams.Set("image", tt.userInput)
+			req.URL.RawQuery = queryParams.Encode()
+
 			rr := httptest.NewRecorder()
 
 			handler := http.HandlerFunc(scanHandler)

@@ -15,12 +15,12 @@ const (
 	bomFile    = "bom.json"
 	schemaFile = "bom-1.6.schema.json"
 
-	scanURL = "http://localhost:8080/scan/"
+	scanURL = "http://localhost:8080/scan?image="
 
 	// images without labels result in non-compliant SBOMs currently.
 	// This PR fixes it: https://github.com/anchore/syft/pull/3119.
 	// Waiting on syft to release the fix.
-	image = "ubuntu:latest"
+	image = "ghcr.io/stefanprodan/podinfo:latest"
 
 	payloadEndpoint = scanURL + image
 )

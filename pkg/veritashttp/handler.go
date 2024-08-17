@@ -16,7 +16,11 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 func scanHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		userInput := r.PathValue("userInput")
+		userInput := r.URL.Query().Get("image")
+		if userInput == "" {
+			http.Error(w, "Missing 'image' query parameter", http.StatusBadRequest)
+			return
+		}
 		reportPayload, err := scanner.Scan(userInput)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

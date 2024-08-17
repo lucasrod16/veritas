@@ -11,7 +11,7 @@ import (
 func StartServer(ctx context.Context, shutdownSignal <-chan os.Signal) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/{$}", rootHandler)
-	mux.HandleFunc("/scan/{userInput}", scanHandler)
+	mux.HandleFunc("/scan", scanHandler)
 
 	srv := &http.Server{Addr: ":8080", Handler: stripSlashes(mux)}
 
