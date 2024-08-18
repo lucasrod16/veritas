@@ -17,7 +17,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	server, err := server.StartServer()
+	server, err := server.StartServer("dashboard")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -6,14 +6,6 @@ import (
 	"github.com/lucasrod16/veritas/pkg/scanner"
 )
 
-func rootHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		w.Write([]byte("Welcome to Veritas 🤠\n"))
-		return
-	}
-	http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
-}
-
 func scanHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		userInput := r.URL.Query().Get("image")

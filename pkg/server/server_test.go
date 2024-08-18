@@ -16,7 +16,7 @@ func TestStart(t *testing.T) {
 	var err error
 	var g errgroup.Group
 	g.Go(func() error {
-		server, err = StartServer()
+		server, err = StartServer("../../dashboard")
 		require.NoError(t, err)
 		return nil
 	})
@@ -30,16 +30,13 @@ func TestStart(t *testing.T) {
 		require.Nil(t, resp)
 	})
 
-	t.Run("root", func(t *testing.T) {
+	t.Run("dashboard", func(t *testing.T) {
 		resp, err := http.Get("http://localhost:8080/")
 		require.NoError(t, err)
 		defer resp.Body.Close()
 
-		rb, err := io.ReadAll(resp.Body)
-		require.NoError(t, err)
-
 		require.Equal(t, http.StatusOK, resp.StatusCode)
-		require.Equal(t, "Welcome to Veritas 🤠\n", string(rb))
+		require.Equal(t, "text/html; charset=utf-8", resp.Header.Get("Content-Type"))
 	})
 
 	t.Run("GET scan success", func(t *testing.T) {
@@ -48,6 +45,7 @@ func TestStart(t *testing.T) {
 		defer resp.Body.Close()
 
 		require.Equal(t, http.StatusOK, resp.StatusCode)
+		require.Equal(t, "application/json; charset=utf-8", resp.Header.Get("Content-Type"))
 	})
 
 	t.Run("non-GET scan failure", func(t *testing.T) {

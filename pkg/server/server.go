@@ -6,9 +6,9 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func StartServer() (*http.Server, error) {
+func StartServer(dashboardPath string) (*http.Server, error) {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/{$}", rootHandler)
+	mux.Handle("/", http.FileServer(http.Dir(dashboardPath)))
 	mux.HandleFunc("/scan", scanHandler)
 	srv := &http.Server{Addr: ":8080", Handler: stripSlashes(mux)}
 

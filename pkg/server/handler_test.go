@@ -9,53 +9,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestRootHandler(t *testing.T) {
-	tests := []struct {
-		name           string
-		method         string
-		expectedStatus int
-		expectedBody   string
-	}{
-		{
-			name:           "GET request",
-			method:         http.MethodGet,
-			expectedStatus: http.StatusOK,
-			expectedBody:   "Welcome to Veritas 🤠\n",
-		},
-		{
-			name:           "POST request",
-			method:         http.MethodPost,
-			expectedStatus: http.StatusMethodNotAllowed,
-			expectedBody:   "405 Method Not Allowed\n",
-		},
-		{
-			name:           "PUT request",
-			method:         http.MethodPut,
-			expectedStatus: http.StatusMethodNotAllowed,
-			expectedBody:   "405 Method Not Allowed\n",
-		},
-		{
-			name:           "DELETE request",
-			method:         http.MethodDelete,
-			expectedStatus: http.StatusMethodNotAllowed,
-			expectedBody:   "405 Method Not Allowed\n",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			req := httptest.NewRequest(tt.method, "http://example.com/", nil)
-			rr := httptest.NewRecorder()
-
-			handler := http.HandlerFunc(rootHandler)
-			handler.ServeHTTP(rr, req)
-
-			require.Equal(t, tt.expectedStatus, rr.Code)
-			require.Equal(t, tt.expectedBody, rr.Body.String())
-		})
-	}
-}
-
 func TestScanHandler(t *testing.T) {
 	tests := []struct {
 		name           string
