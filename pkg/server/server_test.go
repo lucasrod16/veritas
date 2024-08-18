@@ -39,7 +39,7 @@ func TestStart(t *testing.T) {
 		require.Equal(t, "text/html; charset=utf-8", resp.Header.Get("Content-Type"))
 	})
 
-	t.Run("GET scan success", func(t *testing.T) {
+	t.Run("GET scan report success", func(t *testing.T) {
 		resp, err := http.Get("http://localhost:8080/scan/report?image=cgr.dev/chainguard/static:latest")
 		require.NoError(t, err)
 		defer resp.Body.Close()
@@ -48,7 +48,7 @@ func TestStart(t *testing.T) {
 		require.Equal(t, "application/json; charset=utf-8", resp.Header.Get("Content-Type"))
 	})
 
-	t.Run("non-GET scan failure", func(t *testing.T) {
+	t.Run("non-GET scan report failure", func(t *testing.T) {
 		resp, err := http.Post("http://localhost:8080/scan/report?image=cgr.dev/chainguard/static:latest", "application/json", nil)
 		require.NoError(t, err)
 		defer resp.Body.Close()
@@ -58,6 +58,15 @@ func TestStart(t *testing.T) {
 
 		require.Equal(t, http.StatusMethodNotAllowed, resp.StatusCode)
 		require.Equal(t, "405 Method Not Allowed\n", string(rb))
+	})
+
+	t.Run("GET scan details success", func(t *testing.T) {
+		resp, err := http.Get("http://localhost:8080/scan/details?image=cgr.dev/chainguard/static:latest")
+		require.NoError(t, err)
+		defer resp.Body.Close()
+
+		require.Equal(t, http.StatusOK, resp.StatusCode)
+		require.Equal(t, "application/json; charset=utf-8", resp.Header.Get("Content-Type"))
 	})
 
 	t.Run("invalid path", func(t *testing.T) {

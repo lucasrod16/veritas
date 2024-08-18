@@ -30,6 +30,30 @@ func scanReportHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
 }
 
+func scanDetailsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		userInput := r.URL.Query().Get("image")
+		if userInput == "" {
+			http.Error(w, "Missing 'image' query parameter", http.StatusBadRequest)
+			return
+		}
+		cfg, err := scanner.Scan(userInput)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		vulnDetails, err := scanner.PrintVulnDetails(cfg)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Write([]byte(vulnDetails))
+		return
+	}
+	http.Error(w, "405 Method Not Allowed", http.StatusMethodNotAllowed)
+}
+
 func stripSlashes(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path

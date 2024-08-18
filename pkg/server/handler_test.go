@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestScanHandler(t *testing.T) {
+func TestScanReportHandler(t *testing.T) {
 	tests := []struct {
 		name           string
 		method         string
@@ -51,6 +51,55 @@ func TestScanHandler(t *testing.T) {
 			rr := httptest.NewRecorder()
 
 			handler := http.HandlerFunc(scanReportHandler)
+			handler.ServeHTTP(rr, req)
+
+			require.Equal(t, tt.expectedStatus, rr.Code)
+		})
+	}
+}
+
+func TestScanDetailsHandler(t *testing.T) {
+	tests := []struct {
+		name           string
+		method         string
+		expectedStatus int
+		userInput      string
+	}{
+		{
+			name:           "valid input",
+			method:         http.MethodGet,
+			expectedStatus: http.StatusOK,
+			userInput:      "cgr.dev/chainguard/static:latest",
+		},
+		{
+			name:           "invalid input",
+			method:         http.MethodGet,
+			expectedStatus: http.StatusInternalServerError,
+			userInput:      "not-a-valid-image-reference........",
+		},
+		{
+			name:           "bad request",
+			method:         http.MethodGet,
+			expectedStatus: http.StatusBadRequest,
+			userInput:      "",
+		},
+		{
+			name:           "non-GET request",
+			method:         http.MethodPost,
+			expectedStatus: http.StatusMethodNotAllowed,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest(tt.method, "http://example.com/", nil)
+			queryParams := req.URL.Query()
+			queryParams.Set("image", tt.userInput)
+			req.URL.RawQuery = queryParams.Encode()
+
+			rr := httptest.NewRecorder()
+
+			handler := http.HandlerFunc(scanDetailsHandler)
 			handler.ServeHTTP(rr, req)
 
 			require.Equal(t, tt.expectedStatus, rr.Code)
