@@ -6,38 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Veritas Dashboard</title>
     <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            /* Center all text and inline elements */
+        }
+
         .chart-container {
             display: flex;
             justify-content: left;
             align-items: center;
             height: 50vh;
+            margin-top: 50px;
+            /* Optional: space between header and chart */
+        }
+
+        #loadChartButton {
+            display: block;
+            margin: 20px auto;
+            /* Center button and add space */
         }
     </style>
 </head>
 
 <body>
+    <h1>Veritas Dashboard</h1>
     <div class="chart-container">
         <canvas id="myChart"></canvas>
     </div>
+    <button id="loadChartButton">Load Chart</button> <!-- Button to trigger chart load -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="dashboard.js"></script> <!-- Include the JavaScript file -->
     <script>
-        const ctx = document.getElementById('myChart');
-
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow'],
-                datasets: [{
-                    label: 'Vulnerabilities',
-                    data: [300, 50, 100],
-                    backgroundColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
-                    ],
-                }]
-            },
+        document.getElementById('loadChartButton').addEventListener('click', async () => {
+            const sbomData = await getSBOM();
+            if (sbomData) {
+                renderChart(sbomData.vulnerabilities);
+                localStorage.setItem('vulnData', JSON.stringify(sbomData.vulnerabilities));
+            }
         });
+        loadChartFromLocalStorage();
     </script>
 </body>
 

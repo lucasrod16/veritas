@@ -20,7 +20,7 @@ const (
 	// images without labels result in non-compliant SBOMs currently.
 	// This PR fixes it: https://github.com/anchore/syft/pull/3119.
 	// Waiting on syft to release the fix.
-	image = "ghcr.io/stefanprodan/podinfo:latest"
+	image = "ubuntu:latest"
 
 	payloadEndpoint = scanURL + image
 )
