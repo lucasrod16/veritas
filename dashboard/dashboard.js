@@ -27,7 +27,7 @@ function renderChart(vulns) {
         chart.destroy();
     }
 
-    sevCount = getSeverityCount(vulns);
+    const sevCount = getSeverityCount(vulns);
 
     chart = new Chart(ctx, {
         type: 'pie',
@@ -63,26 +63,26 @@ function renderChart(vulns) {
     });
 }
 
-function getSeverityCount(vulnerabilities) {
-    const severityCounts = {};
+function getSeverityCount(vulns) {
+    const severityCount = {};
 
-    vulnerabilities.forEach(vulnerability => {
-        const ratings = vulnerability.ratings || [];
+    vulns.forEach(vuln => {
+        const ratings = vuln.ratings || [];
         ratings.forEach(rating => {
             let severity = rating.severity;
             if (severity === "none") {
-                severity = "negligible"
+                severity === "negligible"
             }
-            if (!severityCounts[severity]) {
-                severityCounts[severity] = 0;
+            if (!severityCount[severity]) {
+                severityCount[severity] = 0;
             }
-            severityCounts[severity]++;
+            severityCount[severity]++;
         });
     });
-    return severityCounts;
+    return severityCount;
 }
 
-function loadChartFromLocalStorage() {
+function loadFromLocalStorage() {
     const savedData = localStorage.getItem('vulnData');
     if (savedData) {
         const vulnData = JSON.parse(savedData);
