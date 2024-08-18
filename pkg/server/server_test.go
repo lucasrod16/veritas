@@ -40,7 +40,7 @@ func TestStart(t *testing.T) {
 	})
 
 	t.Run("GET scan success", func(t *testing.T) {
-		resp, err := http.Get("http://localhost:8080/scan?image=cgr.dev/chainguard/static:latest")
+		resp, err := http.Get("http://localhost:8080/scan/report?image=cgr.dev/chainguard/static:latest")
 		require.NoError(t, err)
 		defer resp.Body.Close()
 
@@ -49,7 +49,7 @@ func TestStart(t *testing.T) {
 	})
 
 	t.Run("non-GET scan failure", func(t *testing.T) {
-		resp, err := http.Post("http://localhost:8080/scan?image=cgr.dev/chainguard/static:latest", "application/json", nil)
+		resp, err := http.Post("http://localhost:8080/scan/report?image=cgr.dev/chainguard/static:latest", "application/json", nil)
 		require.NoError(t, err)
 		defer resp.Body.Close()
 

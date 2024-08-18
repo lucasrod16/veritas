@@ -15,7 +15,7 @@ const (
 	bomFile    = "bom.json"
 	schemaFile = "bom-1.6.schema.json"
 
-	scanURL = "http://localhost:8080/scan?image="
+	scanURL = "http://localhost:8080/scan/report?image="
 
 	// images without labels result in non-compliant SBOMs currently.
 	// This PR fixes it: https://github.com/anchore/syft/pull/3119.

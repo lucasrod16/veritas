@@ -6,7 +6,7 @@ import (
 	"github.com/lucasrod16/veritas/pkg/scanner"
 )
 
-func scanHandler(w http.ResponseWriter, r *http.Request) {
+func scanReportHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		userInput := r.URL.Query().Get("image")
 		if userInput == "" {

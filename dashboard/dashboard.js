@@ -1,7 +1,7 @@
 let chart = null;
 
 async function getSBOM() {
-    const url = "http://localhost:8080/scan?image=rockylinux:8.7";
+    const url = "http://localhost:8080/scan/report?image=rockylinux:8.7";
     try {
         const response = await fetch(url);
         if (!response.ok) {

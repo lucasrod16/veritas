@@ -50,7 +50,7 @@ func TestScanHandler(t *testing.T) {
 
 			rr := httptest.NewRecorder()
 
-			handler := http.HandlerFunc(scanHandler)
+			handler := http.HandlerFunc(scanReportHandler)
 			handler.ServeHTTP(rr, req)
 
 			require.Equal(t, tt.expectedStatus, rr.Code)
