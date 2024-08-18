@@ -13,7 +13,12 @@ func scanHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Missing 'image' query parameter", http.StatusBadRequest)
 			return
 		}
-		reportPayload, err := scanner.Scan(userInput)
+		cfg, err := scanner.Scan(userInput)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		reportPayload, err := scanner.PrintCycloneDXJSON(cfg)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

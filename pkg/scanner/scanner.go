@@ -1,7 +1,6 @@
 package scanner
 
 import (
-	"bytes"
 	"fmt"
 	"path/filepath"
 
@@ -10,7 +9,6 @@ import (
 	"github.com/anchore/grype/grype/db"
 	"github.com/anchore/grype/grype/matcher"
 	"github.com/anchore/grype/grype/pkg"
-	"github.com/anchore/grype/grype/presenter/cyclonedx"
 	"github.com/anchore/grype/grype/presenter/models"
 	"github.com/anchore/grype/grype/store"
 	"github.com/anchore/syft/syft"
@@ -22,7 +20,7 @@ const grypeDBListingURL = "https://toolbox-data.anchore.io/grype/databases/listi
 
 var grypeDBdir = filepath.Join(xdg.CacheHome, "veritas", "db")
 
-func Scan(userInput string) (string, error) {
+func Scan(userInput string) (models.PresenterConfig, error) {
 	var (
 		err error
 		g   errgroup.Group
@@ -61,7 +59,7 @@ func Scan(userInput string) (string, error) {
 
 	err = g.Wait()
 	if err != nil {
-		return "", err
+		return models.PresenterConfig{}, err
 	}
 
 	defer closer.Close()
@@ -73,22 +71,16 @@ func Scan(userInput string) (string, error) {
 
 	matches, _, err := vulnMatcher.FindMatches(packages, pkgContext)
 	if err != nil {
-		return "", err
+		return models.PresenterConfig{}, err
 	}
 
-	pres := cyclonedx.NewJSONPresenter(models.PresenterConfig{
-		Matches:          *matches,
-		Packages:         packages,
-		Context:          pkgContext,
-		MetadataProvider: store,
-		SBOM:             sbom,
-		DBStatus:         status,
-	})
-
-	buf := &bytes.Buffer{}
-	err = pres.Present(buf)
-	if err != nil {
-		return "", err
-	}
-	return buf.String(), nil
+	return models.PresenterConfig{
+			Matches:          *matches,
+			Packages:         packages,
+			Context:          pkgContext,
+			MetadataProvider: store,
+			SBOM:             sbom,
+			DBStatus:         status,
+		},
+		nil
 }
