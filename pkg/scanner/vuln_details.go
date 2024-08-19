@@ -6,26 +6,27 @@ import (
 
 	"github.com/anchore/grype/grype/pkg"
 	"github.com/anchore/grype/grype/presenter/models"
+	"github.com/anchore/grype/grype/vulnerability"
 )
 
-type vulnDetails struct {
-	Pairs []vulnerabilityPackagePair `json:"details"`
-}
-
-type vulnerabilityPackagePair struct {
-	Vulnerability models.Vulnerability `json:"vulnerability"`
-	Package       pkg.Package          `json:"package"`
+type vulnData struct {
+	Vulnerability vulnerability.Vulnerability `json:"vulnerability"`
+	Package       pkg.Package                 `json:"package"`
+	Severity      string                      `json:"severity"`
 }
 
 func PrintVulnDetails(cfg models.PresenterConfig) (string, error) {
-	vulnDetails := vulnDetails{}
+	vulnDetails := []vulnData{}
 	for _, match := range cfg.Matches.Sorted() {
-		vuln := models.NewVulnerability(match.Vulnerability, nil)
-		pair := vulnerabilityPackagePair{
-			Vulnerability: vuln,
-			Package:       match.Package,
+		vulnMetadata, err := cfg.MetadataProvider.GetMetadata(match.Vulnerability.ID, match.Vulnerability.Namespace)
+		if err != nil {
+			return "", err
 		}
-		vulnDetails.Pairs = append(vulnDetails.Pairs, pair)
+		vulnDetails = append(vulnDetails, vulnData{
+			Vulnerability: match.Vulnerability,
+			Package:       match.Package,
+			Severity:      vulnMetadata.Severity,
+		})
 	}
 
 	buf := &bytes.Buffer{}
