@@ -1,7 +1,4 @@
-let chart = null;
-
-async function getSBOM() {
-    const url = "http://localhost:8080/scan/report?image=rockylinux:8.7";
+async function fetchData(url) {
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -11,9 +8,8 @@ async function getSBOM() {
         if (!contentType || !contentType.includes("application/json")) {
             throw new TypeError("Oops, we haven't got JSON!");
         }
-
-        const sbom = await response.json();
-        return sbom;
+        const jdata = await response.json();
+        return jdata;
     } catch (error) {
         console.error(error.message);
         return null;
@@ -21,6 +17,7 @@ async function getSBOM() {
 }
 
 function renderChart(vulns) {
+    let chart = null;
     const ctx = document.getElementById('myChart').getContext('2d');
 
     if (chart) {
@@ -33,7 +30,6 @@ function renderChart(vulns) {
         type: 'pie',
         data: {
             labels: [
-                'Negligible',
                 'Low',
                 'Medium',
                 'High',
@@ -43,7 +39,6 @@ function renderChart(vulns) {
             datasets: [{
                 label: 'Vulnerabilities',
                 data: [
-                    sevCount.negligible,
                     sevCount.low,
                     sevCount.medium,
                     sevCount.high,
@@ -51,7 +46,6 @@ function renderChart(vulns) {
                     sevCount.unknown
                 ],
                 backgroundColor: [
-                    '#0031c0', // Negligible
                     '#0bb400', // Low
                     '#ffff00', // Medium
                     '#ff7000', // High
@@ -82,10 +76,32 @@ function getSeverityCount(vulns) {
     return severityCount;
 }
 
-function loadFromLocalStorage() {
-    const savedData = localStorage.getItem('vulnData');
-    if (savedData) {
-        const vulnData = JSON.parse(savedData);
-        renderChart(vulnData);
+function renderTable(data) {
+    const templateData = {
+        details: data.map(item => ({
+            name: item.package.Name,
+            installed: item.package.Version,
+            fixedIn: item.vulnerability.Fix.Versions ? item.vulnerability.Fix.Versions : 'N/A',
+            type: item.package.Type,
+            vulnerabilityId: item.vulnerability.ID,
+            severity: item.severity
+        }))
+    };
+    const template = document.getElementById('table-template').innerHTML;
+    const rendered = Mustache.render(template, templateData);
+    document.getElementById('table-container').innerHTML = rendered;
+}
+
+function loadFromSessionStorage() {
+    const sbomData = sessionStorage.getItem('sbomData');
+    if (sbomData) {
+        const parsedSbomData = JSON.parse(sbomData);
+        renderChart(parsedSbomData);
+    }
+
+    const tableData = sessionStorage.getItem('tableData');
+    if (tableData) {
+        const parsedTableData = JSON.parse(tableData);
+        renderTable(parsedTableData);
     }
 }

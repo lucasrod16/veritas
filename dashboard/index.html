@@ -11,15 +11,49 @@
             font-family: Arial, sans-serif;
             text-align: center;
             /* Center all text and inline elements */
+            background-color: #f4f4f4;
+            /* Background color for better contrast */
+        }
+
+        h1 {
+            margin: 20px 0;
+            /* Margin around the header */
         }
 
         .chart-container {
             display: flex;
-            justify-content: left;
+            flex-direction: column;
             align-items: center;
+            margin: 20px;
             height: 50vh;
-            margin-top: 50px;
-            /* Optional: space between header and chart */
+            /* Centered chart and some margin */
+        }
+
+        .table-container {
+            margin: 20px;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Adding background, padding, and shadow for the table */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        td {
+            text-align: left;
         }
 
         #loadChartButton {
@@ -32,21 +66,67 @@
 
 <body>
     <h1>Veritas Dashboard</h1>
+
     <div class="chart-container">
         <canvas id="myChart"></canvas>
+        <button id="loadChartButton">Load Chart</button>
     </div>
-    <button id="loadChartButton">Load Chart</button> <!-- Button to trigger chart load -->
+
+    <div class="table-container" id="table-container">
+        <!-- Table will be rendered here -->
+    </div>
+
+    <!-- Mustache Template for Table Rows -->
+    <script id="table-template" type="text/template">
+        <table>
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>INSTALLED</th>
+                    <th>FIXED-IN</th>
+                    <th>TYPE</th>
+                    <th>VULNERABILITY</th>
+                    <th>SEVERITY</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#details}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td>{{installed}}</td>
+                    <td>{{fixedIn}}</td>
+                    <td>{{type}}</td>
+                    <td>{{vulnerabilityId}}</td>
+                    <td>{{severity}}</td>
+                </tr>
+                {{/details}}
+                {{^details}}
+                <tr>
+                    <td colspan="6">No vulnerabilities found.</td>
+                </tr>
+                {{/details}}
+            </tbody>
+        </table>
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/mustache@latest/mustache.min.js"></script>
     <script src="dashboard.js"></script> <!-- Include the JavaScript file -->
     <script>
         document.getElementById('loadChartButton').addEventListener('click', async () => {
-            const sbomData = await getSBOM();
+            const sbomData = await fetchData("http://localhost:8080/scan/report?image=debian");
             if (sbomData) {
                 renderChart(sbomData.vulnerabilities);
-                localStorage.setItem('vulnData', JSON.stringify(sbomData.vulnerabilities));
+                sessionStorage.setItem('sbomData', JSON.stringify(sbomData.vulnerabilities));
+            }
+
+            const tableData = await fetchData("http://localhost:8080/scan/details?image=debian");
+            if (tableData) {
+                renderTable(tableData);
+                sessionStorage.setItem('tableData', JSON.stringify(tableData));
             }
         });
-        loadFromLocalStorage();
+        loadFromSessionStorage();
     </script>
 </body>
 
