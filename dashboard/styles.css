@@ -2,11 +2,13 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #f4f4f4;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
 }
 
 h1 {
     margin: 20px 0;
+    color: #ffffff;
 }
 
 .input-container {
@@ -21,15 +23,17 @@ h1 {
     font-size: 16px;
     width: 300px;
     margin-bottom: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #333;
     border-radius: 4px;
+    background-color: #1e1e1e;
+    color: #ffffff;
 }
 
 .input-container button {
     padding: 10px 20px;
     font-size: 16px;
     background-color: #007bff;
-    color: white;
+    color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -50,8 +54,9 @@ h1 {
 .table-container {
     margin: 20px;
     padding: 20px;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 table {
@@ -61,14 +66,16 @@ table {
 
 th,
 td {
-    border: 1px solid #ddd;
+    border: 1px solid #333;
     padding: 8px;
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #333;
+    color: #ffffff;
 }
 
 td {
-    text-align: left;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
 }
