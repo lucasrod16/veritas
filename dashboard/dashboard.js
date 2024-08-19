@@ -1,3 +1,8 @@
+document.addEventListener('DOMContentLoaded', () => {
+    loadFromSessionStorage();
+    setupEventListeners();
+});
+
 async function fetchData(url) {
     try {
         const response = await fetch(url);
@@ -8,16 +13,15 @@ async function fetchData(url) {
         if (!contentType || !contentType.includes("application/json")) {
             throw new TypeError("Oops, we haven't got JSON!");
         }
-        const jdata = await response.json();
-        return jdata;
+        return await response.json();
     } catch (error) {
         console.error(error.message);
         return null;
     }
 }
 
+let chart = null;
 function renderChart(vulns) {
-    let chart = null;
     const ctx = document.getElementById('myChart').getContext('2d');
 
     if (chart) {
@@ -39,11 +43,11 @@ function renderChart(vulns) {
             datasets: [{
                 label: 'Vulnerabilities',
                 data: [
-                    sevCount.low,
-                    sevCount.medium,
-                    sevCount.high,
-                    sevCount.critical,
-                    sevCount.unknown
+                    sevCount.low || 0,
+                    sevCount.medium || 0,
+                    sevCount.high || 0,
+                    sevCount.critical || 0,
+                    sevCount.unknown || 0
                 ],
                 backgroundColor: [
                     '#0bb400', // Low
@@ -65,7 +69,7 @@ function getSeverityCount(vulns) {
         ratings.forEach(rating => {
             let severity = rating.severity;
             if (severity === "none") {
-                severity === "negligible"
+                severity = "negligible";
             }
             if (!severityCount[severity]) {
                 severityCount[severity] = 0;
@@ -81,7 +85,7 @@ function renderTable(data) {
         details: data.map(item => ({
             name: item.package.Name,
             installed: item.package.Version,
-            fixedIn: item.vulnerability.Fix.Versions ? item.vulnerability.Fix.Versions : 'N/A',
+            fixedIn: item.vulnerability.Fix.Versions || 'N/A',
             type: item.package.Type,
             vulnerabilityId: item.vulnerability.ID,
             severity: item.severity
@@ -104,4 +108,36 @@ function loadFromSessionStorage() {
         const parsedTableData = JSON.parse(tableData);
         renderTable(parsedTableData);
     }
+}
+
+function setupEventListeners() {
+    document.getElementById('scanButton').addEventListener('click', async () => {
+        const imageReference = document.getElementById('imageInput').value.trim();
+        if (imageReference) {
+            const encodedImageReference = encodeURIComponent(imageReference);
+
+            try {
+                const [sbomResponse, tableResponse] = await Promise.all([
+                    fetchData(`http://localhost:8080/scan/report?image=${encodedImageReference}`),
+                    fetchData(`http://localhost:8080/scan/details?image=${encodedImageReference}`)
+                ]);
+
+                if (sbomResponse) {
+                    renderChart(sbomResponse.vulnerabilities);
+                    sessionStorage.setItem('sbomData', JSON.stringify(sbomResponse.vulnerabilities));
+                }
+
+                if (tableResponse) {
+                    renderTable(tableResponse);
+                    sessionStorage.setItem('tableData', JSON.stringify(tableResponse));
+                }
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('An error occurred while fetching data. Please try again.');
+            }
+        } else {
+            alert('Please enter a container image reference.');
+        }
+    });
 }
