@@ -11,7 +11,7 @@
 <body>
     <h1>Veritas Dashboard</h1>
 
-    <div v-scope>
+    <div v-scope @vue:mounted="mounted">
         <div class="error-message" v-if="errorMessage" v-text="errorMessage"></div>
 
         <div class="input-container">
