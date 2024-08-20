@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestStart(t *testing.T) {
+func TestStartServer(t *testing.T) {
 	server, err := StartServer("../../dashboard")
 	require.NoError(t, err)
 
