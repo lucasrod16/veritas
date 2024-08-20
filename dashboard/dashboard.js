@@ -1,24 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     loadFromSessionStorage();
-    setupEventListeners();
+    await setupEventListeners();
 });
-
-async function fetchData(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-        }
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-            throw new TypeError("Oops, we haven't got JSON!");
-        }
-        return await response.json();
-    } catch (error) {
-        console.error(error.message);
-        return null;
-    }
-}
 
 let chart = null;
 function renderChart(vulns) {
@@ -110,7 +93,7 @@ function loadFromSessionStorage() {
     }
 }
 
-function setupEventListeners() {
+async function setupEventListeners() {
     document.getElementById('scanButton').addEventListener('click', async () => {
         const imageReference = document.getElementById('imageInput').value.trim();
         if (imageReference) {
@@ -118,26 +101,46 @@ function setupEventListeners() {
 
             try {
                 const [sbomResponse, tableResponse] = await Promise.all([
-                    fetchData(`http://localhost:8080/scan/report?image=${encodedImageReference}`),
-                    fetchData(`http://localhost:8080/scan/details?image=${encodedImageReference}`)
+                    fetch(`http://localhost:8080/scan/report?image=${encodedImageReference}`),
+                    fetch(`http://localhost:8080/scan/details?image=${encodedImageReference}`)
                 ]);
 
-                if (sbomResponse) {
-                    renderChart(sbomResponse.vulnerabilities);
-                    sessionStorage.setItem('sbomData', JSON.stringify(sbomResponse.vulnerabilities));
+                if (!sbomResponse.ok) {
+                    showError(await sbomResponse.text())
+                    return;
+                }
+                if (!tableResponse.ok) {
+                    showError(await tableResponse.text())
+                    return;
                 }
 
-                if (tableResponse) {
-                    renderTable(tableResponse);
-                    sessionStorage.setItem('tableData', JSON.stringify(tableResponse));
+                const sbomData = await sbomResponse.json();
+                const tableData = await tableResponse.json();
+
+                if (sbomData.vulnerabilities) {
+                    renderChart(sbomData.vulnerabilities);
+                    sessionStorage.setItem('sbomData', JSON.stringify(sbomData.vulnerabilities));
+                }
+
+                if (tableData) {
+                    renderTable(tableData);
+                    sessionStorage.setItem('tableData', JSON.stringify(tableData));
                 }
 
             } catch (error) {
-                console.error('Error fetching data:', error);
-                alert('An error occurred while fetching data. Please try again.');
+                console.error(error.message);
+                showError(error.message);
             }
         } else {
-            alert('Please enter a container image reference.');
+            showError('Please enter a container image reference.');
         }
     });
+}
+
+function showError(message) {
+    const errorElement = document.getElementById('error-message');
+    if (errorElement) {
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+    }
 }

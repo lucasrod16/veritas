@@ -11,6 +11,8 @@
 <body>
     <h1>Veritas Dashboard</h1>
 
+    <div class="error-message" id="error-message" style="display:none;"></div>
+
     <div class="input-container">
         <input type="text" id="imageInput" placeholder="Enter container image reference">
         <button id="scanButton">Scan</button>
@@ -20,11 +22,8 @@
         <canvas id="myChart"></canvas>
     </div>
 
-    <div class="table-container" id="table-container">
-        <!-- Table will be rendered here -->
-    </div>
+    <div class="table-container" id="table-container"></div>
 
-    <!-- Mustache Template for Table Rows -->
     <script id="table-template" type="text/template">
         <table>
             <thead>
