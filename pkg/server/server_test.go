@@ -11,7 +11,7 @@ import (
 )
 
 func TestStartServer(t *testing.T) {
-	server, err := StartServer("../../dashboard")
+	server, err := StartServer()
 	require.NoError(t, err)
 
 	t.Cleanup(func() {
