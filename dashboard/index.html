@@ -11,53 +11,49 @@
 <body>
     <h1>Veritas Dashboard</h1>
 
-    <div class="error-message" id="error-message" style="display:none;"></div>
+    <div v-scope>
+        <div class="error-message" v-if="errorMessage" v-text="errorMessage"></div>
 
-    <div class="input-container">
-        <input type="text" id="imageInput" placeholder="Enter container image reference">
-        <button id="scanButton">Scan</button>
+        <div class="input-container">
+            <input type="text" v-model="imageReference" placeholder="Enter container image reference">
+            <button @click="handleScan">Scan</button>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>INSTALLED</th>
+                        <th>FIXED-IN</th>
+                        <th>TYPE</th>
+                        <th>VULNERABILITY</th>
+                        <th>SEVERITY</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in tableData" :key="item.vulnerability.ID">
+                        <td>{{ item.package.Name }}</td>
+                        <td>{{ item.package.Version }}</td>
+                        <td>{{ item.vulnerability.Fix.Versions || 'N/A' }}</td>
+                        <td>{{ item.package.Type }}</td>
+                        <td>{{ item.vulnerability.ID }}</td>
+                        <td>{{ item.severity }}</td>
+                    </tr>
+                    <tr v-if="!tableData.length">
+                        <td colspan="6">No vulnerabilities found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="chart-container">
-        <canvas id="myChart"></canvas>
-    </div>
-
-    <div class="table-container" id="table-container"></div>
-
-    <script id="table-template" type="text/template">
-        <table>
-            <thead>
-                <tr>
-                    <th>NAME</th>
-                    <th>INSTALLED</th>
-                    <th>FIXED-IN</th>
-                    <th>TYPE</th>
-                    <th>VULNERABILITY</th>
-                    <th>SEVERITY</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#details}}
-                <tr>
-                    <td>{{name}}</td>
-                    <td>{{installed}}</td>
-                    <td>{{fixedIn}}</td>
-                    <td>{{type}}</td>
-                    <td>{{vulnerabilityId}}</td>
-                    <td>{{severity}}</td>
-                </tr>
-                {{/details}}
-                {{^details}}
-                <tr>
-                    <td colspan="6">No vulnerabilities found.</td>
-                </tr>
-                {{/details}}
-            </tbody>
-        </table>
-    </script>
-
+    <script src="https://unpkg.com/petite-vue"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/mustache@latest/mustache.min.js"></script>
     <script src="dashboard.js"></script>
 </body>
 
