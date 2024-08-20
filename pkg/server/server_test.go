@@ -11,7 +11,6 @@ import (
 )
 
 func TestStartServer(t *testing.T) {
-
 	server, err := StartServer()
 	require.NoError(t, err)
 
