@@ -95,7 +95,10 @@ function loadFromSessionStorage() {
 
 async function setupEventListeners() {
     document.getElementById('scanButton').addEventListener('click', async () => {
+        clearError();
+
         const imageReference = document.getElementById('imageInput').value.trim();
+
         if (imageReference) {
             const encodedImageReference = encodeURIComponent(imageReference);
 
@@ -142,5 +145,13 @@ function showError(message) {
     if (errorElement) {
         errorElement.textContent = message;
         errorElement.style.display = 'block';
+    }
+}
+
+function clearError() {
+    const errorElement = document.getElementById('error-message');
+    if (errorElement) {
+        errorElement.textContent = '';
+        errorElement.style.display = 'none';
     }
 }
