@@ -1,0 +1,10 @@
+[build]
+cmd = "make build"
+bin = "bin/veritas"
+include_dir = ["dashboard"]
+include_ext = ["go", "tpl", "tmpl", "html", "css", "js"]
+
+[proxy]
+enabled = true
+app_port = 8080
+proxy_port = 8081
