@@ -8,18 +8,11 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"golang.org/x/sync/errgroup"
 )
 
 func TestStart(t *testing.T) {
-	var server *http.Server
-	var err error
-	var g errgroup.Group
-	g.Go(func() error {
-		server, err = StartServer("../../dashboard")
-		require.NoError(t, err)
-		return nil
-	})
+	server, err := StartServer("../../dashboard")
+	require.NoError(t, err)
 
 	t.Cleanup(func() {
 		err := server.Shutdown(context.Background())
