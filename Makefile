@@ -1,10 +1,10 @@
 default: build
 
 build:
-	CGO_ENABLED=0 go build -o ./bin/veritas .
+	CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/veritas .
 
 build-schema-validator:
-	CGO_ENABLED=0 go build -o ./bin/schema-validator ./cmd/schema-validator
+	CGO_ENABLED=0 go build -ldflags="-s -w" -o ./bin/schema-validator ./cmd/schema-validator
 
 test:
 	@go test -v -failfast -coverprofile=c.out ./pkg/...
