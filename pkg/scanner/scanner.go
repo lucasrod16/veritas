@@ -8,6 +8,7 @@ import (
 	"github.com/adrg/xdg"
 	"github.com/anchore/grype/grype"
 	"github.com/anchore/grype/grype/db"
+	"github.com/anchore/grype/grype/db/legacy/distribution"
 	"github.com/anchore/grype/grype/matcher"
 	"github.com/anchore/grype/grype/pkg"
 	"github.com/anchore/grype/grype/presenter/models"
@@ -26,11 +27,11 @@ func Scan(userInput string) (models.PresenterConfig, *db.Closer, error) {
 	var g errgroup.Group
 
 	var store *store.Store
-	var status *db.Status
+	var status *distribution.Status
 	var closer *db.Closer
 
 	g.Go(func() error {
-		store, status, closer, err = grype.LoadVulnerabilityDB(db.Config{
+		store, status, closer, err = grype.LoadVulnerabilityDB(distribution.Config{
 			DBRootDir:  grypeDBdir,
 			ListingURL: grypeDBListingURL,
 		}, true)
