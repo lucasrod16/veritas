@@ -22,7 +22,7 @@ func Start() (*http.Server, error) {
 	mux.HandleFunc("/scan/report", scanReportHandler)
 	mux.HandleFunc("/scan/details", scanDetailsHandler)
 
-	srv := &http.Server{Addr: ":8080", Handler: stripSlashes(mux)}
+	srv := &http.Server{Addr: "0.0.0.0:8080", Handler: stripSlashes(mux)}
 
 	var g errgroup.Group
 	g.Go(func() error {

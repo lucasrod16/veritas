@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/lucasrod16/veritas/pkg/server"
 )
@@ -18,11 +19,8 @@ var dashboard embed.FS
 func main() {
 	server.Dashboard = dashboard
 
-	shutdown := make(chan os.Signal, 1)
-	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
-
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
 	server, err := server.Start()
 	if err != nil {
@@ -31,14 +29,16 @@ func main() {
 
 	log.Printf("Server listening on %s\n", server.Addr)
 
-	<-shutdown
-
+	<-ctx.Done()
+	stop()
 	log.Println("Server shutting down...")
 
-	err = server.Shutdown(ctx)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err = server.Shutdown(shutdownCtx)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	log.Println("Server gracefully shut down")
 }
