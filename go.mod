@@ -3,7 +3,7 @@ module github.com/lucasrod16/veritas
 go 1.23.2
 
 require (
-	github.com/adrg/xdg v0.5.2
+	github.com/adrg/xdg v0.5.3
 	github.com/anchore/grype v0.83.0
 	github.com/anchore/syft v1.15.0
 	github.com/stretchr/testify v1.9.0
