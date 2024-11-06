@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	github.com/adrg/xdg v0.5.3
-	github.com/anchore/grype v0.83.0
+	github.com/anchore/grype v0.84.0
 	github.com/anchore/syft v1.16.0
 	github.com/stretchr/testify v1.9.0
 	github.com/xeipuuv/gojsonschema v1.2.0
