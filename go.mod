@@ -8,7 +8,7 @@ require (
 	github.com/anchore/syft v1.16.0
 	github.com/stretchr/testify v1.9.0
 	github.com/xeipuuv/gojsonschema v1.2.0
-	golang.org/x/sync v0.8.0
+	golang.org/x/sync v0.9.0
 )
 
 require (
