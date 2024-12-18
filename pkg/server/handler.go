@@ -19,12 +19,11 @@ func scanReportHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cfg, closer, err := scanner.Scan(userInput)
+	cfg, err := scanner.Scan(userInput)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	defer closer.Close()
 
 	cdx := printer.NewCycloneDXPrinter()
 
@@ -50,12 +49,11 @@ func scanDetailsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cfg, closer, err := scanner.Scan(userInput)
+	cfg, err := scanner.Scan(userInput)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	defer closer.Close()
 
 	vd := printer.NewVulnDetailsPrinter()
 
