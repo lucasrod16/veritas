@@ -7,7 +7,6 @@ import (
 
 	"github.com/adrg/xdg"
 	"github.com/anchore/grype/grype"
-	"github.com/anchore/grype/grype/db"
 	"github.com/anchore/grype/grype/db/legacy/distribution"
 	"github.com/anchore/grype/grype/matcher"
 	"github.com/anchore/grype/grype/pkg"
@@ -22,16 +21,15 @@ const grypeDBListingURL = "https://toolbox-data.anchore.io/grype/databases/listi
 
 var grypeDBdir = filepath.Join(xdg.CacheHome, "veritas", "db")
 
-func Scan(userInput string) (models.PresenterConfig, *db.Closer, error) {
+func Scan(userInput string) (models.PresenterConfig, error) {
 	var err error
 	var g errgroup.Group
 
 	var store *store.Store
 	var status *distribution.Status
-	var closer *db.Closer
 
 	g.Go(func() error {
-		store, status, closer, err = grype.LoadVulnerabilityDB(distribution.Config{
+		store, status, err = grype.LoadVulnerabilityDB(distribution.Config{
 			DBRootDir:  grypeDBdir,
 			ListingURL: grypeDBListingURL,
 		}, true)
@@ -72,7 +70,7 @@ func Scan(userInput string) (models.PresenterConfig, *db.Closer, error) {
 
 	err = g.Wait()
 	if err != nil {
-		return models.PresenterConfig{}, nil, err
+		return models.PresenterConfig{}, err
 	}
 
 	vulnMatcher := grype.VulnerabilityMatcher{
@@ -82,7 +80,7 @@ func Scan(userInput string) (models.PresenterConfig, *db.Closer, error) {
 
 	matches, _, err := vulnMatcher.FindMatches(packages, pkgContext)
 	if err != nil {
-		return models.PresenterConfig{}, nil, err
+		return models.PresenterConfig{}, err
 	}
 
 	return models.PresenterConfig{
@@ -93,6 +91,5 @@ func Scan(userInput string) (models.PresenterConfig, *db.Closer, error) {
 			SBOM:             sbom,
 			DBStatus:         status,
 		},
-		closer,
 		nil
 }
